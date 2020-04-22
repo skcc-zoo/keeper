@@ -1,6 +1,7 @@
 package com.example.keeper;
 
 import com.example.keeper.event.CommonEvent;
+import com.example.keeper.event.KeeperDispatched;
 import com.example.keeper.event.PopulationChanged;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +37,7 @@ public class KafkaListener {
             if (event.getEventType().equals("PopulationChanged")) {
                 PopulationChanged populationChanged = new PopulationChanged((HashMap<String, Object>) event.getContent());
 
-                if (populationChanged.getPopulation() > MAX_POPULATION) {
+                if (populationChanged.getPopulation() >= MAX_POPULATION) {
                     Iterable<Keeper> keepers = keeperRepository.findAll();
 
                     for (Keeper keeper : keepers
@@ -47,7 +48,15 @@ public class KafkaListener {
                             break;
                         }
                     }
+                } else if(populationChanged.getPopulation() == MAX_POPULATION - 1) {
+                    Optional<Keeper> optionalKeeper = keeperRepository.findBySpace(populationChanged.getSpaceId());
+                    if(optionalKeeper.isPresent()) {
+                        Keeper keeper = optionalKeeper.get();
+                        keeper.setSpace(null);
+                        keeperRepository.save(keeper);
+                    }
                 }
+
             }
 
         } catch (IOException e) {
