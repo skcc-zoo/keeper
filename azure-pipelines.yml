@@ -121,6 +121,13 @@ stages:
                             timeoutSeconds: 2
                             periodSeconds: 5
                             failureThreshold: 5
+                          env:
+                          - name: MAX_ANIMAL_POPULATION
+                            valueFrom:
+                              secretKeyRef:
+                                name: max-animal-population-configmap
+                                key: MAX_ANIMAL_POPULATION
+
               secretType: 'dockerRegistry'
               containerRegistryType: 'Azure Container Registry'
           - task: Kubernetes@1
