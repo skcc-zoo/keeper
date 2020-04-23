@@ -30,6 +30,7 @@ public class Keeper {
         KeeperDispatched keeperDispatched = new KeeperDispatched();
         keeperDispatched.setId(this.id);
         keeperDispatched.setSpace(this.space);
+        keeperDispatched.setName(this.name);
         CommonEvent event = new CommonEvent(KeeperDispatched.class.getSimpleName(), keeperDispatched);
         event.publish();;
     }

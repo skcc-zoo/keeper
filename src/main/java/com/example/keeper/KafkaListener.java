@@ -39,7 +39,6 @@ public class KafkaListener {
 
                 if (populationChanged.getPopulation() >= MAX_POPULATION) {
                     Iterable<Keeper> keepers = keeperRepository.findAll();
-
                     for (Keeper keeper : keepers
                     ) {
                         if (keeper.getSpace() == null) {
@@ -48,10 +47,9 @@ public class KafkaListener {
                             break;
                         }
                     }
-                } else if(populationChanged.getPopulation() == MAX_POPULATION - 1) {
-                    Optional<Keeper> optionalKeeper = keeperRepository.findBySpace(populationChanged.getSpaceId());
-                    if(optionalKeeper.isPresent()) {
-                        Keeper keeper = optionalKeeper.get();
+                } else if (populationChanged.getPopulation() == MAX_POPULATION - 1) {
+                    Iterable<Keeper> keepers = keeperRepository.findBySpace(populationChanged.getSpaceId());
+                    for (Keeper keeper : keepers) {
                         keeper.setSpace(null);
                         keeperRepository.save(keeper);
                     }

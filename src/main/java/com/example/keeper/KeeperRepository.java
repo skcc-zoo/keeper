@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface KeeperRepository extends CrudRepository<Keeper, Long> {
 
-    Optional<Keeper> findBySpace(String space);
+    Iterable<Keeper> findBySpace(String space);
 }
